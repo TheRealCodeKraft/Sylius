@@ -10,6 +10,20 @@
 import 'semantic-ui-css/components/dropdown';
 import $ from 'jquery';
 
+const get = function (obj, path) {
+
+	path = path.split('.')
+	var current = obj;
+
+	for (var i = 0; i < path.length; i++) {
+		if (!current[path[i]]) return undefined;
+		current = current[path[i]];
+	}
+
+	return current;
+
+};
+
 $.fn.extend({
   autoComplete() {
     this.each((idx, el) => {
@@ -38,7 +52,7 @@ $.fn.extend({
             return {
               success: true,
               results: response.map(item => ({
-                name: item[choiceName],
+                name: get(item, choiceName),
                 value: item[choiceValue],
               })),
             };
@@ -62,7 +76,7 @@ $.fn.extend({
           onSuccess(response) {
             response.forEach((item) => {
               menuElement.append((
-                $(`<div class="item" data-value="${item[choiceValue]}">${item[choiceName]}</div>`)
+                $(`<div class="item" data-value="${item[choiceValue]}">${get(item, choiceName)}</div>`)
               ));
             });
           },
